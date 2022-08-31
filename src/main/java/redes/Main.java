@@ -10,33 +10,10 @@ public class Main {
     {
         Scanner scan = new Scanner(System.in);
 
+        String domain = "alumchat.fun";
 
 
-        System.out.println("Enter domain: ");
-        String domain = scan.nextLine();
-
-
-
-
-        boolean inband = true;
-        boolean invalid_input = true;
-        while (invalid_input)
-        {
-            System.out.println("Do you want have an account? (Y/N): ");
-
-            switch (scan.nextLine().toUpperCase())
-            {
-                case "Y":
-                    inband = false;
-                    invalid_input = false;
-                    break;
-                case "N":
-                    invalid_input = false;
-                    break;
-                default:
-                    break;
-            }
-        }
+        boolean inband = false;
 
 
 
@@ -55,12 +32,8 @@ public class Main {
 
         if (sech.con != null)
             System.out.println("Connected successfully");
-        try {
-            ui myUI = new ui();
-        }
-        catch (SmackException.NotConnectedException e){System.out.println("Not yet connected");}
-        catch (SmackException.NotLoggedInException e){System.out.println("Not yet logged in");}
-        catch (InterruptedException e) {System.out.println(e.getMessage());}
+
+
 
     }
 }

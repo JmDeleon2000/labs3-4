@@ -6,8 +6,8 @@
 
 
     <groupId>uvg.redes</groupId>
-    <artifactId>XMPPchat</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>labs3y4</artifactId>
+    <version>1.0</version>
 
     <dependencies>
         <dependency>
