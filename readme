@@ -1,0 +1,6 @@
+Compile ideally use Intellij or:
+mvn package
+
+Run with Intellij or:
+cd /target/classes/redes
+java  Main.class
