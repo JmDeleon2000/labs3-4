@@ -15,8 +15,6 @@ public class Main {
 
         boolean inband = false;
 
-
-
         System.out.println("Enter username (not JID): ");
         String user = scan.nextLine();
 
@@ -33,7 +31,31 @@ public class Main {
         if (sech.con != null)
             System.out.println("Connected successfully");
 
+        boolean validInput = false;
+        String userInput = "";
+        while (!validInput)
+        {
+            System.out.println("Ingrese una de las siguientes opciones:");
+            System.out.println("1) Flooding");
+            System.out.println("2) Distance Vector Routing");
+            System.out.println("3) Link State Routing");
 
+            userInput = scan.nextLine().toLowerCase();
+            switch (userInput)
+            {
+                case"1":
+                    //TODO flooding
+                    break;
+                case"2":
+                    //TODO dvr
+                    break;
+                case"3":
+                    //TODO lsr
+                    break;
+                default:
+                    System.out.println("Opción inválida");
+            }
+        }
 
     }
 }
