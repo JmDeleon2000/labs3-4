@@ -51,7 +51,7 @@
           <includes>
             <include>org.jivesoftware.smack.*</include>
             <include>org.jivesoftware.smackx.*</include>
-            <include>org.jxmpp.*</include>
+            <include>org.json.*</include>
           </includes>
         </configuration>
       </plugin>

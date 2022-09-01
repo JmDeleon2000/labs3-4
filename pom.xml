@@ -30,6 +30,11 @@
             <artifactId>smack-extensions</artifactId>
             <version>4.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20180130</version>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -82,7 +87,8 @@
                     <includes>
                         <include>org.jivesoftware.smack.*</include>
                         <include>org.jivesoftware.smackx.*</include>
-                        <include>org.jxmpp.*</include>
+                        <include>org.json.*</include>
+
                     </includes>
                 </configuration>
                 <executions>

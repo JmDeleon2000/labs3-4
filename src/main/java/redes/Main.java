@@ -40,20 +40,25 @@ public class Main {
             System.out.println("2) Distance Vector Routing");
             System.out.println("3) Link State Routing");
 
+            Config conf = new Config(user+"@alumchat.fun");
             userInput = scan.nextLine().toLowerCase();
             switch (userInput)
             {
                 case"1":
                     //TODO flooding
+                    validInput = true;
                     break;
                 case"2":
-                    //TODO dvr
+                    DVR dvr = new DVR(sech, conf);
+                    validInput = true;
                     break;
                 case"3":
                     //TODO lsr
+                    validInput = true;
                     break;
                 default:
                     System.out.println("Opción inválida");
+                    break;
             }
         }
 
