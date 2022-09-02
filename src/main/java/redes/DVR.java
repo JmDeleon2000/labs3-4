@@ -7,6 +7,8 @@ import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
 import org.json.JSONObject;
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
@@ -23,6 +25,9 @@ public class DVR {
     JSONObject names;
     ArrayList<ArrayList<Integer>> vecinos;
     ArrayList<String> nameList = new ArrayList<String>();
+
+
+    JSONArray myVec ;
 
     Scanner UI = new Scanner(System.in);
     public DVR(session sech, Config conf)
@@ -41,6 +46,26 @@ public class DVR {
         Iterator<String> keys = names.keys();
         while (keys.hasNext())
             nameList.add(keys.next());
+
+
+        vecinos = new ArrayList<ArrayList<Integer>>();
+
+
+        JSONArray myVec = topo.getJSONArray(mynode);
+        for(int i = 0; i <= topo.length(); i++) {
+            vecinos.add(new ArrayList<Integer>());
+            for (int j = 0; j <= topo.length(); j++)
+            {
+                if (j == i)
+                    vecinos.get(i).add(1000);
+                else
+                    vecinos.get(i).add(0);
+            }
+        }
+
+        System.out.println(vecinos);
+
+
 
         Chat chat;
         ChatManager manager = ChatManager.getInstanceFor(sech.con);
@@ -84,12 +109,12 @@ public class DVR {
 
 class Msg
 {
-    String fuente = "";
-    String destino = "";
-    int saltos = 0;
-    int distancia = 0;
-    String recorrido = "";
-    String mensaje = "";
+    public String fuente = "";
+    public String destino = "";
+    public int saltos = 0;
+    public int distancia = 0;
+    public String recorrido = "";
+    public String mensaje = "";
 
 
 
@@ -115,9 +140,38 @@ class Msg
 class listener implements IncomingChatMessageListener
 {
 
-    public listener(){}
+    ChatManager chats;
+    String myname;
+
+    public listener(ChatManager c, String n)
+    {
+        chats = c;
+        myname = n;
+    }
     @Override
     public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-        System.out.println(message.getBody());
+        Msg m = new Msg(message.getBody());
+        if (myname.equals(m.destino))
+                System.out.println("Mensaje recibido: "  + message.getBody());
+        else
+        {
+            System.out.println("Pasando: " + message.getBody());
+            try {
+                Chat forward = chats.chatWith(JidCreate.entityBareFrom(m.destino));
+                m.saltos += 1;
+                m.distancia += 1;
+                m.recorrido += myname + ",";
+
+                forward.send(m.toString());
+
+            } catch (XmppStringprepException e) {
+                throw new RuntimeException(e);
+            } catch (SmackException.NotConnectedException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
     }
 }
