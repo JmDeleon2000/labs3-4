@@ -49,6 +49,19 @@ menu2= "BIENVENIDA/ BEINVENIDO " +global_user +" \n PRESIONE : \n 1) PARA CERRAR
 
 # print(names)
 
+#obtiene la letra del nodo que corresponde
+def getnode(address):
+	keys = [k for k, v in alias.items() if v == address]
+	return keys[0]
+
+#obtiene el listado de vecinos de cualquier nodo
+def getneighbors(node):
+	return rutas[node]
+
+#busca la letra que corresponde al siguiente nodo
+def searchpath(origin, destination):
+	print("calculating min path FROM: "+ origin + " TO: "+ destination)
+	
 
 
 class chatClient(ClientXMPP):
@@ -135,7 +148,10 @@ class chatClient(ClientXMPP):
 	           "message":js['message']}
 			print(newmsg)
 
-			self.send_message(mto="nodob@alumchat.fun",mbody=newmsg,mtype='chat')
+			vecinos = getneighbors(node)
+			for vecino in vecinos :
+				print(vecino)
+				self.send_message(mto=alias[vecino],mbody=newmsg,mtype='chat')
 			print("RETRANSMITIRE ")
 
 
@@ -164,8 +180,8 @@ class chatClient(ClientXMPP):
 	
 xmpp= ""
 
-def searchpath(origin, destination):
-	print("calculating min path FROM: "+ origin + " TO: "+ destination)
+
+
 
 
 #MEnu de registro/ login
@@ -190,20 +206,21 @@ while (seleccion !="2"):
 		pojo2= str(pojo2)
 		pojo2 =pojo2.replace("'",'"')
 		#Para encontrar el nodo que corresponde a el emisor
-		keys = [k for k, v in alias.items() if v == global_user]
+		
 		print("SI NO ESTOY MAL, con ese login, tu nodo deberia ser")
-		print(keys[0])
-		node= keys[0]
+		node= getnode(global_user)
+		print(node)
+		
 
 		#Para encontrar el nodo que corresponde al destinatario
-		keys2 = [k for k, v in alias.items() if v == global_destino]
+		
 		print("SI NO ESTOY MAL, con ese destinatario, su nodo deberia ser")
-		print(keys2[0])
-		node_dest= keys2[0]
-
+		node_dest=getnode(global_destino)
+		print(node_dest)
+		
 		print("TUS VECINOS SON: ")
-		print(rutas[node])
-
+		print(getneighbors(node))
+		
 		searchpath(node,node_dest)
 
 
