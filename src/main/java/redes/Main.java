@@ -1,5 +1,14 @@
 package redes;
 import org.jivesoftware.smack.SmackException;
+import netscape.javascript.JSObject;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.Message;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 
 import java.util.Scanner;
 

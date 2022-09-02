@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="ldaptive.netscape" type="repository">
+    <properties maven-id="org.ldaptive:ldaptive-netscape:1.0.13" />
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-netscape-1.0.13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-1.0.13.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ldapsdk-4.1.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-netscape-1.0.13-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-1.0.13-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-netscape-1.0.13-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ldaptive-1.0.13-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.25-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
