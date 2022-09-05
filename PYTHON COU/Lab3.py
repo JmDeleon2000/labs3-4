@@ -121,7 +121,7 @@ class chatClient(ClientXMPP):
 	# 	#print(event)
 
 	#manejo del evento al recibir mensaje deirecto
-	def message(self,msg):
+	def message(self, msg):
 		print("SOY EL NODO "+node + " RECIBI ESTE MENSAJE :"+msg['body'] + " de : "+msg['from'].bare)
 		print("Lo trate de hacer json")
 		# print(msg['body']['origin'])
