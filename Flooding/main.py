@@ -7,7 +7,6 @@ from aioconsole import ainput
 
 import json
 import networkx as nx
-import matplotlib.pyplot as plt
 
 # Funcion para cargar los archivos de configuracion
 def loadConfig():
