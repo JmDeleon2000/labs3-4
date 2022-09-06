@@ -22,6 +22,19 @@ with open('PYTHON COU/names-demo.txt', 'r') as r:
     nodes = {v:i for i,v in e['config'].items()}
     JIDs = e['config']
 
+
+def sendInitTable(user):
+    global table
+    myNode = nodes[user]
+    newTable = {}
+    newTable[myNode] = [0, 'A']
+    
+    for i, v in neighbours.items():
+        if (myNode in v):
+            newTable[i] = [1, myNode]
+    table = newTable
+    return [JIDs[i] for i in neighbours.keys() if myNode in neighbours[i]], json.dumps(newTable)
+
 def dvr(body, user):
     global table
     e = json.loads(body)
@@ -54,11 +67,11 @@ def dvr(body, user):
 
         if e['response']:
             return False, '', ''
-        return True, JIDs[e['node']], json.dumps({'table':table, 
+        msg = json.dumps({'table':table, 
         'node':nodes[user], 'response':not(changed)})
+        return True, [JIDs[i] for i in neighbours.keys() if myNode in neighbours[i]], msg
     else:
         nodeRenv = howToGetTo(nodes[e['dest']])
-        print(nodeRenv)
 
         e['saltos']+=1
         e['distancia']+=1
@@ -75,14 +88,13 @@ def howToGetTo(n):
             if eta < quickest:
                 quickest = eta
                 out = v[n][1]
-                print(f'{n}:{out}')
     return out
 
 #SE LLAMA CUANDO SE SABE QUE ESTE NODO NO ES EL DESTINATARIO
-#f, msgs, dests = dvr(msg['body'], global_user)
+#f, msg, dests = dvr(msg['body'], global_user)
 #if f:
-#    for mensaje, destino in zip(msgs, dests): (puede que se envíe más de un mensaje, cada uno con su destinatario)
-#        reenviar los mensajes
+#    for dest in dests: (puede que se envíe el mensaje a más de un destinatario, por eso se devuelve una lista)
+#        reenviar msg a dest
 
 m = {'table':{'F':[0, 'F'], 'A':[4, 'F'], 'B':[7, 'F']},
     'node':'F',
@@ -126,4 +138,3 @@ print(f)
 print(d)
 print(m)
 
-print(tables)
