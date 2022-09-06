@@ -1,6 +1,7 @@
 
 import logging
 import asyncio
+import re
 #import time
 import json
 from slixmpp.exceptions import IqError, IqTimeout
@@ -16,6 +17,8 @@ global_password=""
 global_message=""
 global_destino=""
 node_dest=""
+isSender = True 
+
 
 rutas={
 	"A":['B','D'],
@@ -33,30 +36,33 @@ alias= {
 menu1= "BIENVENIDA/ BEINVENIDO A ALUMNCHAT \n PRESIONE : \n 1) PARA LOGUEARSE CON UN USUARIO EXISTENTE\n 2) PARA SALIR \n"
 menu2= "BIENVENIDA/ BEINVENIDO " +global_user +" \n PRESIONE : \n 1) PARA CERRAR SESION DE UN USUARIO EXISTENTE\n 2) PARA ELIMINAR A UN USUARIO EXISTENTE\n 3) PARA MOSTRAR TODOS LOS CONTACTOS Y SUS ESTADOS\n 4) PARA AGREGAR UN USUARIO A LOS CONTACTOS\n 5) PARA ENVIAR UN MENSAJE DIRECTO A UN USUARIO\n 6) PARA ENVIAR UN MENSAJE A UN GRUPO\n 7) PARA DEFINIR UN MENSAJE DE PRESCENCIA \n 8) PARA SALIR \n"
 
-# print("**LEER JSON**")
+print("**LEER JSON de TOPOLOGIAS**")
+with open('topo1.txt','r')as r:
+	s = r.read()
+	s = re.sub(r'\'' , '\"',s)
+	e = json.loads(s)
+	rutas2= e['config']
 
-# text_file = open("names.json", "r")
-# data = text_file.read()
-# text_file.close()
-# print(data)
-# print(type(data))
+print(rutas2)
 
-# data = data.replace("'",'"')
-# print()
+print("**LEER JSON de nombres**")
+with open('names1.txt','r')as r:
+	s = r.read()
+	s = re.sub(r'\'' , '\"',s)
+	e = json.loads(s)
+	alias2= e['config']
 
+print (alias)
 
-# names= json.load(data)
-
-# print(names)
 
 #obtiene la letra del nodo que corresponde
 def getnode(address):
-	keys = [k for k, v in alias.items() if v == address]
+	keys = [k for k, v in alias2.items() if v == address]
 	return keys[0]
 
 #obtiene el listado de vecinos de cualquier nodo
 def getneighbors(node):
-	return rutas[node]
+	return rutas2[node]
 
 #busca la letra que corresponde al siguiente nodo
 def searchpath(origin, destination):
@@ -76,10 +82,10 @@ class chatClient(ClientXMPP):
 	    self.add_event_handler("session_start", self.start)
 	    self.add_event_handler("connection_failed", self.connection_failed)
 	    self.add_event_handler("message", self.message)
-	    self.add_event_handler("groupchat_message", self.muc_message)
+	    #self.add_event_handler("groupchat_message", self.muc_message)
 	    self.add_event_handler("failed_auth",self.failed_auth)
-	    self.add_event_handler("pubsub_config",self.pubsub_config)
-	    self.add_event_handler("groupchat_message",self.muc_message)
+	    #self.add_event_handler("pubsub_config",self.pubsub_config)
+	    #self.add_event_handler("groupchat_message",self.muc_message)
 	    #self.add_event_handler("roster_update",self.get_roster)
 	    #registro de los plugins xep
 	    self.register_plugin('xep_0030') # Service Discovery
@@ -105,13 +111,13 @@ class chatClient(ClientXMPP):
 		print("FAILED AUTHENTICATION WITHE CREDENTIALS PROVIDED")
 
 
-	#Manejo de unirse a grupo
-	def joinChatRoom(self, room, nick):
-		print("JOINING CHAT ROOM")
-		self.room = room
-		self.nick = nick
-		self.plugin['xep_0045'].join_muc(self.room,
-                                     self.nick)
+	# #Manejo de unirse a grupo
+	# def joinChatRoom(self, room, nick):
+	# 	print("JOINING CHAT ROOM")
+	# 	self.room = room
+	# 	self.nick = nick
+	# 	self.plugin['xep_0045'].join_muc(self.room,
+ #                                     self.nick)
 
 
 
@@ -156,14 +162,14 @@ class chatClient(ClientXMPP):
 
 
 
-	#manejo del evento al recibir mensaje grupal (multi user chat)
-	def muc_message(self,msg):
-		print("RECIBI ESTE MENSAJE de un grupo" +msg['body'].bare)
-		##print(msg['body'])
+	# #manejo del evento al recibir mensaje grupal (multi user chat)
+	# def muc_message(self,msg):
+	# 	print("RECIBI ESTE MENSAJE de un grupo" +msg['body'].bare)
+	# 	##print(msg['body'])
 
 
-	def pubsub_config(self,event):
-		print("RECIBI UN PUBSUB CONFIG")
+	# def pubsub_config(self,event):
+	# 	print("RECIBI UN PUBSUB CONFIG")
 
 	#manejo de envio de mensajes
 	def sendMessage(self,msg,dest):
@@ -191,12 +197,23 @@ while (seleccion !="2"):
 	if seleccion =="1":
 		global_user="nodoa@alumchat.fun"
 		global_password="computadora"
-		#global_destino="nodob@alumchat.fun"
-		#global_user=  input ("INGRESE SU USUARIO \n")
-		#global_password=  input("INGRESE SU CONTRASEÑA\n")
-		#global_message= input("INGRESE EL MENSAJE A ENVIAR\n")
-		global_destino= input("INGRESE EL DESINATARIO\n")
-		xmpp = chatClient(global_user, global_password)
+		global_destino="nodob@alumchat.fun"
+		global_user=  input ("INGRESE SU USUARIO \n")
+		global_password=  input("INGRESE SU CONTRASEÑA\n")
+		
+		# Lso nodos pueden tener dos comportamientos: iniciar una conversacion o solo replicar mensajes
+		inputDeenvio =input("Este nodo enviara un mensjae? Y/N ")
+		if(inputDeenvio =="Y" or inputDeenvio =="y"):
+			isSender = True
+		else:
+			isSender =False 
+
+		if (isSender):
+			global_message= input("INGRESE EL MENSAJE A ENVIAR\n")
+			global_destino= input("INGRESE EL DESINATARIO\n")
+		else:
+			print("ESTE NODO SOLO SERVIRA DE REPLICADOR")
+		
 
 		pojo2= {"origin": global_user,
            "dest": global_destino,
@@ -222,7 +239,7 @@ while (seleccion !="2"):
 		print(getneighbors(node))
 		
 		searchpath(node,node_dest)
-
+		xmpp = chatClient(global_user, global_password)
 
 		seleccion="2"
 
