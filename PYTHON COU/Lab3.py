@@ -107,7 +107,10 @@ class chatClient(ClientXMPP):
 		await self.get_roster()
 		if (isSender):
 			self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
-		#self.menu()
+		dests, msg = dvr.sendInitTable(global_user)
+		for vecino in dests :
+				print(f'Tabla enviada a: {vecino}')
+				self.send_message(mto=vecino,mbody=msg,mtype='chat')
 
 	
 
