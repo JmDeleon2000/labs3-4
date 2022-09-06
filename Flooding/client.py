@@ -52,25 +52,24 @@ class Client(slixmpp.ClientXMPP):
     async def reply_message(self, msg):
         message = msg.split('|')
         if message[0] == '1':
-            if self.algoritmo == '1':
-                # Verificar si el mensaje es para mi
-                if message[2] == self.jid:
-                    print("MENSAJE RECIBIDO --> " +  message[6])
+            # Verificar si el mensaje es para mi
+            if message[2] == self.jid:
+                print("MENSAJE RECIBIDO --> " +  message[6])
+            else:
+                if int(message[3]) > 0:
+                    lista = message[4].split(",")
+                    if self.nodo not in lista:
+                        message[4] = message[4] + "," + str(self.nodo)
+                        message[3] = str(int(message[3]) - 1)
+                        StrMessage = "|".join(message)
+                        for i in self.nodes:
+                            self.send_message(
+                                mto=self.names[i],
+                                mbody=StrMessage,
+                                mtype='chat' 
+                            )  
                 else:
-                    if int(message[3]) > 0:
-                        lista = message[4].split(",")
-                        if self.nodo not in lista:
-                            message[4] = message[4] + "," + str(self.nodo)
-                            message[3] = str(int(message[3]) - 1)
-                            StrMessage = "|".join(message)
-                            for i in self.nodes:
-                                self.send_message(
-                                    mto=self.names[i],
-                                    mbody=StrMessage,
-                                    mtype='chat' 
-                                )  
-                    else:
-                        pass
+                    pass
             
         elif message[0] == '2':
             print('Actualizando informacion...')
