@@ -30,6 +30,7 @@ isSender = True
 # 	"A":"nodoa@alumchat.fun",
 # 	"B":"nodob@alumchat.fun",
 # 	"C":"nodoc@alumchat.fun",
+# 	"D":"couvid@alumchat.fun"
 # }
 
 menu1= "BIENVENIDA/ BEINVENIDO A ALUMNCHAT \n PRESIONE : \n 1) PARA LOGUEARSE CON UN USUARIO EXISTENTE\n 2) PARA SALIR \n"
@@ -100,7 +101,7 @@ class chatClient(ClientXMPP):
 
 
 	async def start(self, event):
-		print("WAITING FOR ROSTER")
+		print("CONNECTED...")
 		self.send_presence()
 		await self.get_roster()
 		if (isSender):
@@ -119,36 +120,42 @@ class chatClient(ClientXMPP):
 	#manejo del evento al recibir mensaje deirecto
 	def message(self, msg):
 		print("SOY EL NODO "+node + " RECIBI ESTE MENSAJE :"+msg['body'] + " de : "+msg['from'].bare)
-		print("Lo trate de hacer json")
+		# print("Lo trate de hacer json")
 		# print(msg['body']['origin'])
 		# print(msg['body']['dest'])
 		# print(msg['body']['saltos'])
 		# print(msg['body']['message'])
 
-		js = json.loads(msg['body'])
-		print(js)
-		print(js['origin'])
-		print(js['dest'])
-		print(js['saltos'])
-		print(js['message'])
+		# js = json.loads(msg['body'])
+		# print(js)
+		# print(js['origin'])
+		# print(js['dest'])
+		# print(js['saltos'])
+		# print(js['message'])
 
+		f, dests, msg  = dvr(msg['body'], global_user)
+		# if(global_user== js['dest']):
+		# 	print("YO SOY EL DESTINATARIO")
+		# else:
+		# 	print("Evaluar a quien retransmitir***")
+			
+			# newmsg=  {"origin": js['origin'],
+	  #          "dest": js['dest'],
+	  #          "saltos":js['saltos']+1 ,
+	  #          "message":js['message']}
+			# print(newmsg)
 		
-		if(global_user== js['dest']):
-			print("YO SOY EL DESTINATARIO")
-		else:
-			print("Evaluar a quien retransmitir***")
-
-			newmsg=  {"origin": js['origin'],
-	           "dest": js['dest'],
-	           "saltos":js['saltos']+1 ,
-	           "message":js['message']}
-			print(newmsg)
-
-			vecinos = getneighbors(node)
-			for vecino in vecinos :
-				print(vecino)
-				self.send_message(mto=alias2[vecino],mbody=newmsg,mtype='chat')
+		if f:
 			print("RETRANSMITIRE ")
+			for vecino in dests :
+			print(vecino)
+			self.send_message(mto=vecino,mbody=msg,mtype='chat')
+
+			# vecinos = getneighbors(node)
+			# for vecino in vecinos :
+			# 	print(vecino)
+			# 	self.send_message(mto=alias2[vecino],mbody=newmsg,mtype='chat')
+			
 
 
 
@@ -201,7 +208,7 @@ while (seleccion !="2"):
            "dest": global_destino,
            "saltos": 1,
            "message":global_message}
-		
+		#convierte el mensaje de objeto a string para ser enviado como cuerpo del mensaje
 		pojo2= str(pojo2)
 		pojo2 =pojo2.replace("'",'"')
 		#Para encontrar el nodo que corresponde a el emisor
