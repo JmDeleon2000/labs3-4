@@ -20,18 +20,17 @@ node_dest=""
 isSender = True 
 
 
-rutas={
-	"A":['B','D'],
-	"B":['C'],
-	"D":['B']
-}
+# rutas={
+# 	"A":['B','D'],
+# 	"B":['C'],
+# 	"D":['B']
+# }
 
-alias= {
-	"A":"nodoa@alumchat.fun",
-	"B":"nodob@alumchat.fun",
-	"C":"nodoc@alumchat.fun",
-	"D":"couvid@alumchat.fun"
-}
+# alias= {
+# 	"A":"nodoa@alumchat.fun",
+# 	"B":"nodob@alumchat.fun",
+# 	"C":"nodoc@alumchat.fun",
+# }
 
 menu1= "BIENVENIDA/ BEINVENIDO A ALUMNCHAT \n PRESIONE : \n 1) PARA LOGUEARSE CON UN USUARIO EXISTENTE\n 2) PARA SALIR \n"
 menu2= "BIENVENIDA/ BEINVENIDO " +global_user +" \n PRESIONE : \n 1) PARA CERRAR SESION DE UN USUARIO EXISTENTE\n 2) PARA ELIMINAR A UN USUARIO EXISTENTE\n 3) PARA MOSTRAR TODOS LOS CONTACTOS Y SUS ESTADOS\n 4) PARA AGREGAR UN USUARIO A LOS CONTACTOS\n 5) PARA ENVIAR UN MENSAJE DIRECTO A UN USUARIO\n 6) PARA ENVIAR UN MENSAJE A UN GRUPO\n 7) PARA DEFINIR UN MENSAJE DE PRESCENCIA \n 8) PARA SALIR \n"
@@ -52,7 +51,7 @@ with open('names1.txt','r')as r:
 	e = json.loads(s)
 	alias2= e['config']
 
-print (alias)
+print (alias2)
 
 
 #obtiene la letra del nodo que corresponde
@@ -63,6 +62,11 @@ def getnode(address):
 #obtiene el listado de vecinos de cualquier nodo
 def getneighbors(node):
 	return rutas2[node]
+
+
+print("TESTEARE EL GET NEIGHBORS")
+print(getneighbors("A"))
+
 
 #busca la letra que corresponde al siguiente nodo
 def searchpath(origin, destination):
@@ -82,11 +86,9 @@ class chatClient(ClientXMPP):
 	    self.add_event_handler("session_start", self.start)
 	    self.add_event_handler("connection_failed", self.connection_failed)
 	    self.add_event_handler("message", self.message)
-	    #self.add_event_handler("groupchat_message", self.muc_message)
+	    
 	    self.add_event_handler("failed_auth",self.failed_auth)
-	    #self.add_event_handler("pubsub_config",self.pubsub_config)
-	    #self.add_event_handler("groupchat_message",self.muc_message)
-	    #self.add_event_handler("roster_update",self.get_roster)
+	   
 	    #registro de los plugins xep
 	    self.register_plugin('xep_0030') # Service Discovery
 	    self.register_plugin('xep_0050') #adhoc commands
@@ -101,7 +103,8 @@ class chatClient(ClientXMPP):
 		print("WAITING FOR ROSTER")
 		self.send_presence()
 		await self.get_roster()
-		self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
+		if (isSender):
+			self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
 		#self.menu()
 
 	
@@ -111,20 +114,7 @@ class chatClient(ClientXMPP):
 		print("FAILED AUTHENTICATION WITHE CREDENTIALS PROVIDED")
 
 
-	# #Manejo de unirse a grupo
-	# def joinChatRoom(self, room, nick):
-	# 	print("JOINING CHAT ROOM")
-	# 	self.room = room
-	# 	self.nick = nick
-	# 	self.plugin['xep_0045'].join_muc(self.room,
- #                                     self.nick)
-
-
-
-
-	# def roster_update(self,msg):
-	# 	print("ROSTER UPDATED")
-	# 	#print(event)
+	
 
 	#manejo del evento al recibir mensaje deirecto
 	def message(self, msg):
@@ -157,19 +147,11 @@ class chatClient(ClientXMPP):
 			vecinos = getneighbors(node)
 			for vecino in vecinos :
 				print(vecino)
-				self.send_message(mto=alias[vecino],mbody=newmsg,mtype='chat')
+				self.send_message(mto=alias2[vecino],mbody=newmsg,mtype='chat')
 			print("RETRANSMITIRE ")
 
 
 
-	# #manejo del evento al recibir mensaje grupal (multi user chat)
-	# def muc_message(self,msg):
-	# 	print("RECIBI ESTE MENSAJE de un grupo" +msg['body'].bare)
-	# 	##print(msg['body'])
-
-
-	# def pubsub_config(self,event):
-	# 	print("RECIBI UN PUBSUB CONFIG")
 
 	#manejo de envio de mensajes
 	def sendMessage(self,msg,dest):
