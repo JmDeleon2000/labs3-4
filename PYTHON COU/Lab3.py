@@ -6,6 +6,7 @@ import re
 import json
 from slixmpp.exceptions import IqError, IqTimeout
 from slixmpp import ClientXMPP
+import dvr
 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -120,42 +121,18 @@ class chatClient(ClientXMPP):
 	#manejo del evento al recibir mensaje deirecto
 	def message(self, msg):
 		print("SOY EL NODO "+node + " RECIBI ESTE MENSAJE :"+msg['body'] + " de : "+msg['from'].bare)
-		# print("Lo trate de hacer json")
-		# print(msg['body']['origin'])
-		# print(msg['body']['dest'])
-		# print(msg['body']['saltos'])
-		# print(msg['body']['message'])
 
-		# js = json.loads(msg['body'])
-		# print(js)
-		# print(js['origin'])
-		# print(js['dest'])
-		# print(js['saltos'])
-		# print(js['message'])
 
-		f, dests, msg  = dvr(msg['body'], global_user)
-		# if(global_user== js['dest']):
-		# 	print("YO SOY EL DESTINATARIO")
-		# else:
-		# 	print("Evaluar a quien retransmitir***")
-			
-			# newmsg=  {"origin": js['origin'],
-	  #          "dest": js['dest'],
-	  #          "saltos":js['saltos']+1 ,
-	  #          "message":js['message']}
-			# print(newmsg)
+		f, dests, msg  = dvr.dvr(msg['body'], global_user)
+
 		
+
 		if f:
 			print("RETRANSMITIRE ")
 			for vecino in dests :
-			print(vecino)
-			self.send_message(mto=vecino,mbody=msg,mtype='chat')
+				print(vecino)
+				self.send_message(mto=vecino,mbody=msg,mtype='chat')
 
-			# vecinos = getneighbors(node)
-			# for vecino in vecinos :
-			# 	print(vecino)
-			# 	self.send_message(mto=alias2[vecino],mbody=newmsg,mtype='chat')
-			
 
 
 
