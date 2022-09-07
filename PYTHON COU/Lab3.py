@@ -7,7 +7,7 @@ import json
 from slixmpp.exceptions import IqError, IqTimeout
 from slixmpp import ClientXMPP
 import dvr
-
+ 
 asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 #logging.basicConfig(level=logging.DEBUG,format='%(levelname)-8s %(message)s')
