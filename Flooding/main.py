@@ -16,9 +16,6 @@ def loadConfig():
     with open("names-demo.txt", 'r') as f:
         names = json.load(f)
 
-    print(str(topology))
-    print(str(names))
-
     return topology, names
 
 # Funcion para conocer mi nodo y sus nodos asociados
