@@ -29,9 +29,8 @@ def sendInitTable(user):
     newTable = {}
     newTable[myNode] = [0, myNode]
     
-    for i, v in neighbours.items():
-        if (myNode in v):
-            newTable[i] = [10000, myNode]
+    for i in neighbours[myNode]:
+        newTable[i] = [10000, myNode]
     table = newTable
     return [JIDs[i] for i in neighbours.keys() if myNode in neighbours[i]], json.dumps(newTable)
 
@@ -47,10 +46,10 @@ def dvr(body, user):
         newTable = {}
         newTable[myNode] = [0, myNode]
         
-        for i, v in neighbours.items():
+        for i, v in tables.items():
             if (myNode in v):
                 newTable[i] = [1, myNode]
-        for i in neighbours.keys():
+        for i in tables.keys():
             if i not in newTable.keys():
                 n = howToGetTo(i)
                 if (i == n):
@@ -96,45 +95,37 @@ def howToGetTo(n):
 #    for dest in dests: (puede que se envíe el mensaje a más de un destinatario, por eso se devuelve una lista)
 #        reenviar msg a dest
 
-# m = {'table':{'F':[0, 'F'], 'A':[4, 'F'], 'B':[7, 'F']},
-#     'node':'F',
-#     'response':False}
-
-# f, d, m = dvr(json.dumps(m), 'foo@alumchat.xyz')
-# print(f)
-# print(d)
-# print(m + '\n')
-
-
-# m = {'table':{'C':[0, 'C'], 'A':[2, 'C'], 'D':[10, 'C'], 'G':[9, 'C']},
-#     'node':'C',
-#     'response':False}
-
-# f, d, m = dvr(json.dumps(m), 'foo@alumchat.xyz')
-
-# print(f)
-# print(d)
-# print(m + '\n')
-
-
-# m = {'table':{'B':[0, 'B'], 'F':[2, 'B'], 'G':[9, 'G']},
-#     'node':'B',
-#     'response':False}
-
-# f, d, m = dvr(json.dumps(m), 'foo@alumchat.xyz')
-# print(f)
-# print(d)
-# print(m + '\n')
-
-# m = {'dest':'bar@alumchat.xyz',
-#     'origin':'foo@alumchat.xyz',
-#     'saltos':1,
-#     'distancia':1,
-#     'recorrido':'',
-#     'message':'lorem ipsum'}
-
-# f, d, m = dvr(json.dumps(m), 'foo@alumchat.xyz')
-# print(f)
-# print(d)
-# print(m)
-
+#d, m = sendInitTable('nodoa@alumchat.fun')
+#print(d)
+#print(m)
+#m = {'table':{'A':[1, 'B'], 'C':[2, 'B']},
+#    'node':'B',
+#    'response':False}
+#f, d, m = dvr(json.dumps(m), 'nodoa@alumchat.fun')
+#print(f)
+#print(d)
+#print(m + '\n')
+#m = {'table':{'C':[0, 'C'], 'A':[2, 'C'], 'D':[10, 'C'], 'G':[9, 'C']},
+#    'node':'C',
+#    'response':False}
+#f, d, m = dvr(json.dumps(m), 'nodob@alumchat.fun')
+#print(f)
+#print(d)
+#print(m + '\n')
+#m = {'table':{'B':[0, 'B'], 'F':[2, 'B'], 'G':[9, 'G']},
+#    'node':'B',
+#    'response':False}
+#f, d, m = dvr(json.dumps(m), 'nodoa@alumchat.fun')
+#print(f)
+#print(d)
+#print(m + '\n')
+#m = {'dest':'nodob@alumchat.fun',
+#    'origin':'nodoa@alumchat.fun',
+#    'saltos':1,
+#    'distancia':1,
+#    'recorrido':'',
+#    'message':'lorem ipsum'}
+#f, d, m = dvr(json.dumps(m), 'nodoa@alumchat.fun')
+#print(f)
+#print(d)
+#print(m)
