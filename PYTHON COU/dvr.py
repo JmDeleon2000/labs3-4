@@ -27,11 +27,11 @@ def sendInitTable(user):
     global table
     myNode = nodes[user]
     newTable = {}
-    newTable[myNode] = [0, 'A']
+    newTable[myNode] = [0, myNode]
     
     for i, v in neighbours.items():
         if (myNode in v):
-            newTable[i] = [1, myNode]
+            newTable[i] = [10000, myNode]
     table = newTable
     return [JIDs[i] for i in neighbours.keys() if myNode in neighbours[i]], json.dumps(newTable)
 
@@ -45,7 +45,7 @@ def dvr(body, user):
 
         
         newTable = {}
-        newTable[myNode] = [0, 'A']
+        newTable[myNode] = [0, myNode]
         
         for i, v in neighbours.items():
             if (myNode in v):
