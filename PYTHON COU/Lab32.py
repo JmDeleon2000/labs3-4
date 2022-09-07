@@ -110,7 +110,9 @@ class chatClient(ClientXMPP):
 		self.send_presence()
 		await self.get_roster()
 		if (isSender):
-			self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
+			myneighbors = getneighbors(node)
+			for n in myneighbors:
+				self.send_message(mto=alias2[n],mbody=pojo2,mtype='chat')
 
 	
 
