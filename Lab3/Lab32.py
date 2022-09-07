@@ -7,8 +7,12 @@ import json
 from slixmpp.exceptions import IqError, IqTimeout
 from slixmpp import ClientXMPP
 import dvr
- 
-asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+import sys
+#asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
+
+
+if sys.platform == 'win32' and sys.version_info >= (3, 8):
+     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 #logging.basicConfig(level=logging.DEBUG,format='%(levelname)-8s %(message)s')
 
@@ -106,7 +110,9 @@ class chatClient(ClientXMPP):
 		self.send_presence()
 		await self.get_roster()
 		if (isSender):
-			self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
+			myneighbors = getneighbors(node)
+			for n in myneighbors:
+				self.send_message(mto=alias2[n],mbody=pojo2,mtype='chat')
 
 	
 
