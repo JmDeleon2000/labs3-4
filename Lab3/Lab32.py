@@ -6,7 +6,7 @@ import re
 import json
 from slixmpp.exceptions import IqError, IqTimeout
 from slixmpp import ClientXMPP
-import dvr
+# import dvr
 import sys
 #asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
@@ -77,6 +77,78 @@ print(getneighbors("A"))
 #busca la letra que corresponde al siguiente nodo
 def searchpath(origin, destination):
 	print("calculating min path FROM: "+ origin + " TO: "+ destination)
+	visitedList=[]
+	unvisitedList=[]
+	neigborscopy= rutas2
+	for element in alias2:
+		#print(element)
+		unvisitedList.append(element)
+	#print("UNVIISTED")
+	#print(unvisitedList)
+	# unvisited.remove("A")
+	# print("UNVIISTED")
+	# print(unvisited)
+	table=[]
+	for n in unvisitedList :
+		newitem= {"nodo":n,
+		"saltos": 0,
+		"prev": "x"
+		}
+		table.append(newitem)
+	#print(table)
+
+	#actualizar tabal
+	for visited in unvisitedList:
+		#print("Estoy visitando nodo "+ visited + " Pending neighbors:")
+		for j in rutas2[visited]:
+			if(j in visitedList):
+				pass
+				#print("Tengo vecino "+j+" Pero ya lo visite")
+			else:
+				#print("tengo vecino "+j+" Y no lo he visitado")
+				for tableElement in table:
+					if(tableElement['nodo']==j):
+						#print (tableElement)
+						tableElement['saltos']+=1
+						tableElement['prev']=visited
+
+		
+		visitedList.append(visited)
+		#print("VISITED NOW:")
+	#print(visitedList)
+	#print(table)
+	listaSaltos=[]
+	target= destination
+		#listaSaltos.append(target)
+		#while(True):
+	#print(len(listaSaltos))
+	#print(listaSaltos)
+	
+	##PRIMERO debo encontrar al menos los ultimos 2 pasos porque para cada conexion deben haber al menos 2 nodos
+
+	for element in table:
+			if(element['nodo']== target):
+				listaSaltos.append(element['nodo'])
+				target=element['prev']
+	for element in table:
+			if(element['nodo']== target):
+				listaSaltos.append(element['nodo'])
+				target=element['prev']
+	#despues continuo buscando el resto de pasos
+	while not(listaSaltos[0]==destination and listaSaltos[len(listaSaltos)-1]==origin):
+	
+		for element in table:
+			if(element['nodo']== target):
+				listaSaltos.append(element['nodo'])
+				target=element['prev']
+
+	
+	#Revisa que la ruta termine donde debe terminar y retorna el siguiente paso
+	print(listaSaltos)
+	if(listaSaltos[0]==destination and listaSaltos[len(listaSaltos)-1]==origin):
+		#print("SE CUMPLE ")
+		print("Debemos tomar el camino por "+ listaSaltos[len(listaSaltos)-2])
+		return listaSaltos[len(listaSaltos)-2]
 	
 
 
@@ -110,9 +182,8 @@ class chatClient(ClientXMPP):
 		self.send_presence()
 		await self.get_roster()
 		if (isSender):
-			myneighbors = getneighbors(node)
-			for n in myneighbors:
-				self.send_message(mto=alias2[n],mbody=pojo2,mtype='chat')
+			print("Tratare de enviarle mensaje a NODO: " + global_destino)
+			self.send_message(mto=global_destino,mbody=pojo2,mtype='chat')
 
 	
 
@@ -142,10 +213,13 @@ class chatClient(ClientXMPP):
 			newmsg=  {"origin": js['origin'],"dest": js['dest'],
 			"saltos":js['saltos']+1 ,
 			"message":js['message']}
-			vecinos = getneighbors(node)
-			for vecino in vecinos :
-				print(alias2[vecino])
-				self.send_message(mto=alias2[vecino],mbody=newmsg,mtype='chat')
+
+			newmsg= str(newmsg)
+			newmsg =newmsg.replace("'",'"')
+			#le indica la direccion para obtener el nombre del nodo y calcular el siguiente paso
+			node_dest=getnode(js['dest'])
+			next_node= searchpath(node,node_dest)
+			self.send_message(mto=alias2[next_node],mbody=newmsg,mtype='chat')
 		
 
 
@@ -176,11 +250,13 @@ while (seleccion !="2"):
 	seleccion = input(menu1)
 	print("UD SELCCIONO : " + seleccion)
 	if seleccion =="1":
-		global_user="nodoa@alumchat.fun"
-		global_password="computadora"
-		global_destino="nodob@alumchat.fun"
+		#para hacer varias pruebas y hardcodearle las credenciales.
+		#global_user="nodoa@alumchat.fun"
+		#global_password="computadora"
 		global_user=  input ("INGRESE SU USUARIO \n")
 		global_password=  input("INGRESE SU CONTRASEÑA\n")
+		#solo en caso que sea replicador
+		global_destino=global_user
 		
 		# Lso nodos pueden tener dos comportamientos: iniciar una conversacion o solo replicar mensajes
 		inputDeenvio =input("Este nodo enviara un mensjae? Y/N ")
@@ -219,7 +295,8 @@ while (seleccion !="2"):
 		print("TUS VECINOS SON: ")
 		print(getneighbors(node))
 		
-		searchpath(node,node_dest)
+		next_node= searchpath(node,node_dest)
+		global_destino=alias2[next_node]
 		xmpp = chatClient(global_user, global_password)
 
 		seleccion="2"
