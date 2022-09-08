@@ -25,18 +25,7 @@ node_dest=""
 isSender = True 
 
 
-# rutas={
-# 	"A":['B','D'],
-# 	"B":['C'],
-# 	"D":['B']
-# }
 
-# alias= {
-# 	"A":"nodoa@alumchat.fun",
-# 	"B":"nodob@alumchat.fun",
-# 	"C":"nodoc@alumchat.fun",
-# 	"D":"couvid@alumchat.fun"
-# }
 
 menu1= "BIENVENIDA/ BEINVENIDO A ALUMNCHAT \n PRESIONE : \n 1) PARA LOGUEARSE CON UN USUARIO EXISTENTE\n 2) PARA SALIR \n"
 menu2= "BIENVENIDA/ BEINVENIDO " +global_user +" \n PRESIONE : \n 1) PARA CERRAR SESION DE UN USUARIO EXISTENTE\n 2) PARA ELIMINAR A UN USUARIO EXISTENTE\n 3) PARA MOSTRAR TODOS LOS CONTACTOS Y SUS ESTADOS\n 4) PARA AGREGAR UN USUARIO A LOS CONTACTOS\n 5) PARA ENVIAR UN MENSAJE DIRECTO A UN USUARIO\n 6) PARA ENVIAR UN MENSAJE A UN GRUPO\n 7) PARA DEFINIR UN MENSAJE DE PRESCENCIA \n 8) PARA SALIR \n"
@@ -83,11 +72,7 @@ def searchpath(origin, destination):
 	for element in alias2:
 		#print(element)
 		unvisitedList.append(element)
-	#print("UNVIISTED")
-	#print(unvisitedList)
-	# unvisited.remove("A")
-	# print("UNVIISTED")
-	# print(unvisited)
+	
 	table=[]
 	for n in unvisitedList :
 		newitem= {"nodo":n,
@@ -95,17 +80,16 @@ def searchpath(origin, destination):
 		"prev": "x"
 		}
 		table.append(newitem)
-	#print(table)
-
+	
 	#actualizar tabal
 	for visited in unvisitedList:
 		#print("Estoy visitando nodo "+ visited + " Pending neighbors:")
 		for j in rutas2[visited]:
 			if(j in visitedList):
 				pass
-				#print("Tengo vecino "+j+" Pero ya lo visite")
+				
 			else:
-				#print("tengo vecino "+j+" Y no lo he visitado")
+				
 				for tableElement in table:
 					if(tableElement['nodo']==j):
 						#print (tableElement)
@@ -114,15 +98,10 @@ def searchpath(origin, destination):
 
 		
 		visitedList.append(visited)
-		#print("VISITED NOW:")
-	#print(visitedList)
-	#print(table)
+		
 	listaSaltos=[]
 	target= destination
-		#listaSaltos.append(target)
-		#while(True):
-	#print(len(listaSaltos))
-	#print(listaSaltos)
+		
 	
 	##PRIMERO debo encontrar al menos los ultimos 2 pasos porque para cada conexion deben haber al menos 2 nodos
 
